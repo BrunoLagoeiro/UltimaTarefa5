@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
+import Card from "./Card.jsx";
 
 function App() {
   const [cards, setCards] = useState([]);
   const [erro, setErro] = useState("");
 
+  const [name, setName] = useState("");
+  const [type, setType] = useState("Criatura");
+  const [attack, setAttack] = useState("");
+
   useEffect(() => {
-    fetch("http://localhost:3000/api/cartass")
+    fetch("http://localhost:3000/api/cartas")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
@@ -21,6 +26,18 @@ function App() {
       });
   }, []);
 
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const card = { name, type, attack: Number(attack) };
+
+    setCards([...cards, card]);
+
+    setName("");
+    setType("Criatura");
+    setAttack("");
+  }
+
   if (erro) {
     return <h1>Erro: {erro}</h1>;
   }
@@ -29,6 +46,31 @@ function App() {
     <div>
       <h1>A minha coleção</h1>
       <p>Tenho {cards.length} cartas.</p>
+
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="Nome"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <select value={type} onChange={(e) => setType(e.target.value)}>
+          <option value="Criatura">Criatura</option>
+          <option value="Feitiço">Feitiço</option>
+        </select>
+        <input
+          type="number"
+          placeholder="Ataque"
+          value={attack}
+          onChange={(e) => setAttack(e.target.value)}
+        />
+        <button type="submit">Adicionar</button>
+      </form>
+
+      <ul>
+        {cards.map((card, i) => (
+          <Card key={`${card.name}-${i}`} {...card} />
+        ))}
+      </ul>
     </div>
   );
 }
