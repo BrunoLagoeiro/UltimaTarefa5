@@ -4,6 +4,7 @@ import Card from "./Card.jsx";
 function App() {
   const [cards, setCards] = useState([]);
   const [erro, setErro] = useState("");
+  const [erroForm, setErroForm] = useState("");
 
   const [name, setName] = useState("");
   const [type, setType] = useState("Criatura");
@@ -28,6 +29,7 @@ function App() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    setErroForm("");
 
     fetch("http://localhost:3000/api/cartas", {
       method: "POST",
@@ -49,7 +51,7 @@ function App() {
         setAttack("");
       })
       .catch((error) => {
-        setErro(error.message);
+        setErroForm(error.message);
       });
   }
 
@@ -80,6 +82,7 @@ function App() {
         />
         <button type="submit">Adicionar</button>
       </form>
+      {erroForm && <p className="erro">{erroForm}</p>}
 
       <ul>
         {cards.map((card, i) => (

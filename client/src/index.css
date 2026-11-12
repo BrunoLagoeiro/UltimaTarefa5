@@ -30,3 +30,8 @@ input {
   padding: 1px 6px;
   border-radius: 3px;
 }
+
+.erro {
+  color: #a33b2b;
+  font-weight: 600;
+}
